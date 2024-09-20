@@ -1,0 +1,11 @@
+{
+  "name": "nomina",
+  "version": "1.0.0",
+  "description": "subida de archivos para nomina",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "EdwinDev6",
+  "license": "ISC"
+}
