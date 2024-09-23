@@ -1,8 +1,9 @@
 import { config } from "dotenv";
 config();
 
-export const PORT = process.env.PORT || 3000;
-export const DB_USER = process.env.DB_USER || "sa";
-export const DB_PASSWORD = process.env.DB_PASSWORD || "yourStrong#Password";
-export const DB_SERVER = process.env.DB_SERVER || "DESKTOP-17FQ85ESQLEXPRESS";
-export const DB_DATABASE = process.env.DB_DATABASE || "testconection";
+export const DB_PORT = process.env.DB_PORT;
+export const PORT = process.env.PORT;
+export const DB_USER = process.env.DB_USER;
+export const DB_PASSWORD = process.env.DB_PASSWORD;
+export const DB_SERVER = process.env.DB_SERVER;
+export const DB_DATABASE = process.env.DB_DATABASE;

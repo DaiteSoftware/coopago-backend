@@ -1,23 +1,31 @@
+import {
+  DB_DATABASE,
+  DB_PASSWORD,
+  DB_SERVER,
+  DB_USER,
+  DB_PORT,
+} from "../config.js";
 import sql from "mssql";
-import { DB_DATABASE, DB_PASSWORD, DB_SERVER, DB_USER } from "../config.js";
 
 export const dbSettings = {
+  server: DB_SERVER,
+  port: parseInt(DB_PORT),
+  database: DB_DATABASE,
   user: DB_USER,
   password: DB_PASSWORD,
-  server: DB_SERVER,
-  database: DB_DATABASE,
   options: {
-    encrypt: false, // for azure
-    trustServerCertificate: true, // change to true for local dev / self-signed certs
+    encrypt: true,
+    trustServerCertificate: true,
   },
 };
 
 export const getConnection = async () => {
   try {
-    const pool = await sql.connect(dbSettings);
+    const pool = sql.connect(dbSettings);
+    console.log("Conexión exitosa a la base de datos");
     return pool;
   } catch (error) {
-    console.error(error);
+     throw new Error("Error al conectarse a la base de datos:", error);
   }
 };
 
