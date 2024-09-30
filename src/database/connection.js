@@ -3,9 +3,9 @@ import {
   DB_PASSWORD,
   DB_SERVER,
   DB_USER,
-  DB_PORT,
-} from "../config.js";
-import sql from "mssql";
+  DB_PORT
+} from '../config.js'
+import sql from 'mssql'
 
 export const dbSettings = {
   server: DB_SERVER,
@@ -15,18 +15,18 @@ export const dbSettings = {
   password: DB_PASSWORD,
   options: {
     encrypt: true,
-    trustServerCertificate: true,
-  },
-};
+    trustServerCertificate: true
+  }
+}
 
 export const getConnection = async () => {
   try {
-    const pool = sql.connect(dbSettings);
-    console.log("Conexión exitosa a la base de datos puente");
-    return pool;
+    const pool = sql.connect(dbSettings)
+    console.log('Conexión exitosa a la base de datos puente')
+    return pool
   } catch (error) {
-     throw new Error("Error al conectarse a la base de datos:", error);
+    throw new Error('Error al conectarse a la base de datos:', error)
   }
-};
+}
 
-export { sql };
+export { sql }
