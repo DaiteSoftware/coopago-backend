@@ -22,7 +22,7 @@ export const dbSettings = {
 export const getConnection = async () => {
   try {
     const pool = sql.connect(dbSettings);
-    console.log("Conexión exitosa a la base de datos");
+    console.log("Conexión exitosa a la base de datos puente");
     return pool;
   } catch (error) {
      throw new Error("Error al conectarse a la base de datos:", error);
