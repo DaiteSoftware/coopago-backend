@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import login from "./routes/login.routes.js";
+import { verifyUser } from "./middlewares/verifyDb.js";
 const app = express();
 
 app.use(cors());
@@ -10,6 +11,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Routes
-app.use("/api", login);
+app.use("/api", verifyUser, login);
 
 export default app;
