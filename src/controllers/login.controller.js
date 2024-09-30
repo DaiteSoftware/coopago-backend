@@ -19,14 +19,16 @@ export const login = async (req, res) => {
     const userData = result.recordset[0];
 
     if (!userData) {
-      return res.status(404).json({ error: "Usuario no encontrado en la base de datos" });
+      return res
+        .status(404)
+        .json({ error: "Usuario no encontrado en la base de datos" });
     }
 
     // Enviar respuesta con los datos del usuario
     return res.status(200).json({
       message: "Conexión y login exitoso",
       data: userData,
-      database: dbConfig.database, 
+      database: dbConfig.database,
     });
   } catch (error) {
     console.error("Error al conectarse a la base de datos del usuario:", error);
