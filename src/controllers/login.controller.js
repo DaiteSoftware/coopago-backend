@@ -44,3 +44,18 @@ export const login = async (req, res) => {
     })
   }
 }
+
+export const logout = (req, res) => {
+  if (req.session.usuario) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error al cerrar sesión:', err)
+        return res.status(500).json({ error: 'Error al cerrar sesión' })
+      }
+
+      return res.status(200).json({ message: 'Sesión cerrada exitosamente' })
+    })
+  } else {
+    return res.status(204).json({ error: 'No hay sesión activa' })
+  }
+}
