@@ -1,7 +1,7 @@
 import sql from 'mssql'
 
 export const login = async (req, res) => {
-  const { usuario } = req.body
+  const { usuario, contrasena } = req.body
 
   // Obtener la configuración de la base de datos del middleware
   const dbConfig = req.dbConfig
@@ -10,7 +10,6 @@ export const login = async (req, res) => {
     // Conectarse dinámicamente a la base de datos del usuario
     const pool = await sql.connect(dbConfig)
 
-    // Realizar una consulta para obtener información del usuario
     const result = await pool
       .request()
       .input('usuario', sql.VarChar(100), usuario)
@@ -19,17 +18,22 @@ export const login = async (req, res) => {
     const userData = result.recordset[0]
 
     if (!userData) {
-      return res
-        .status(404)
-        .json({ error: 'Usuario no encontrado en la base de datos' })
+      return res.status(404).json({ error: 'Usuario no encontrado en la base de datos' })
     }
+
+    const passwordIsValid = userData.contrasena === contrasena
+
+    if (!passwordIsValid) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' })
+    }
+
     req.session.usuario = {
       user: dbConfig.user,
       password: dbConfig.password,
       server: dbConfig.host,
       port: parseInt(dbConfig.port),
       database: dbConfig.database
-    } // Guardar el usuario en la sesión
+    }
 
     // Enviar respuesta con los datos del usuario
     return res.status(200).json({
