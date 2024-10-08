@@ -30,16 +30,20 @@ export const login = async (req, res) => {
     req.session.usuario = {
       user: dbConfig.user,
       password: dbConfig.password,
-      server: dbConfig.host,
+      server: dbConfig.server,
       port: parseInt(dbConfig.port),
-      database: dbConfig.database
+      database: dbConfig.database,
+      options: {
+        encrypt: true,
+        trustServerCertificate: true
+      }
     }
 
     // Enviar respuesta con los datos del usuario
     return res.status(200).json({
       message: 'Conexión y login exitoso',
       data: userData,
-      database: dbConfig.database
+      database: dbConfig
     })
   } catch (error) {
     console.error('Error al conectarse a la base de datos del usuario:', error)
