@@ -5,6 +5,7 @@ import login from './routes/login.routes.js'
 import home from './routes/home.routes.js'
 import session from 'express-session'
 import { SESSION_SECRET } from './config.js'
+import getStoredProcedures from './routes/procedures.routes.js'
 const app = express()
 
 app.use(cors())
@@ -23,5 +24,6 @@ app.use(
 // Routes
 app.use('/api', login)
 app.use('/api', home)
+app.use('/api', getStoredProcedures)
 
 export default app
