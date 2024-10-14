@@ -3,15 +3,12 @@ import sql from 'mssql'
 export const login = async (req, res) => {
   const { usuario, contrasena } = req.body
 
-  // Obtener la configuración de la base de datos del middleware
   const dbConfig = req.dbConfig
 
   try {
-    // Conectarse dinámicamente a la base de datos del usuario
     const pool = await sql.connect(dbConfig)
 
-    const result = await pool
-      .request()
+    const result = await pool.request()
       .input('usuario', sql.VarChar(100), usuario)
       .query('SELECT * FROM usuarios WHERE usuario = @usuario')
 
@@ -27,43 +24,41 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: 'Contraseña incorrecta' })
     }
 
-    req.session.usuario = {
+    req.session.auth = {
       user: dbConfig.user,
       password: dbConfig.password,
       server: dbConfig.server,
       port: parseInt(dbConfig.port),
       database: dbConfig.database,
-      options: {
-        encrypt: true,
-        trustServerCertificate: true
-      }
+      options: dbConfig.options
     }
 
-    // Enviar respuesta con los datos del usuario
     return res.status(200).json({
-      message: 'Conexión y login exitoso',
-      data: userData,
+      message: `Conexión y login exitoso bienvenido ${userData.usuario}`,
+      data: {
+        id_usuario: userData.id_usuario,
+        usuario: userData.usuario
+      },
       database: dbConfig
     })
   } catch (error) {
-    console.error('Error al conectarse a la base de datos del usuario:', error)
     return res.status(500).json({
       error: 'Error en el servidor o en la conexión a la base de datos'
     })
   }
 }
 
-export const logout = (req, res) => {
-  if (req.session.usuario) {
+export const logout = async (req, res) => {
+  await sql.close()
+  if (req.session.auth) {
     req.session.destroy((err) => {
       if (err) {
-        console.error('Error al cerrar sesión:', err)
         return res.status(500).json({ error: 'Error al cerrar sesión' })
       }
-
+      res.clearCookie('connect.sid')
       return res.status(200).json({ message: 'Sesión cerrada exitosamente' })
     })
   } else {
-    return res.status(204).json({ error: 'No hay sesión activa' })
+    return res.status(401).json({ error: 'No hay sesión activa para cerrar' })
   }
 }
