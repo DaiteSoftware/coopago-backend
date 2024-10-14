@@ -8,7 +8,10 @@ import { SESSION_SECRET } from './config.js'
 import getStoredProcedures from './routes/procedures.routes.js'
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
 app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
