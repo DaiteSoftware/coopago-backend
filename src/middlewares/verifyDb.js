@@ -5,10 +5,7 @@ export const verifyUser = async (req, res, next) => {
 
   try {
     const pool = await getConnection()
-
-    // Ejecutar el procedimiento almacenado para obtener la conexión
-    const result = await pool
-      .request()
+    const result = await pool.request()
       .input('usuario', sql.VarChar(100), usuario)
       .input('contrasena', sql.VarChar(30), contrasena)
       .execute('p_traer_conexion_usuario_autenticar')
@@ -21,24 +18,20 @@ export const verifyUser = async (req, res, next) => {
       })
     }
 
-    // Asignar los valores al objeto de configuración de la conexión
     req.dbConfig = {
       user: connectionInfo.usuario,
       password: connectionInfo.contrasena,
       server: connectionInfo.hospedaje,
       port: parseInt(connectionInfo.puerto),
-      database: connectionInfo.base_datos
+      database: connectionInfo.base_datos,
+      options: {
+        encrypt: true,
+        trustServerCertificate: true
+      }
     }
-
-    // Log para verificar que la configuración se asignó correctamente
-    console.log('Configuración de conexión asignada:', req.dbConfig)
 
     next()
   } catch (error) {
-    console.error(
-      'Error obteniendo la configuración de la base de datos:',
-      error
-    )
     return res.status(500).json({
       error: 'Error al obtener la configuración de la base de datos.'
     })
