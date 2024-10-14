@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import login from './routes/login.routes.js'
-import home from './routes/home.routes.js'
 import session from 'express-session'
 import { SESSION_SECRET } from './config.js'
 import getStoredProcedures from './routes/procedures.routes.js'
@@ -26,7 +25,6 @@ app.use(
 
 // Routes
 app.use('/api', login)
-app.use('/api', home)
 app.use('/api', getStoredProcedures)
 
 export default app
