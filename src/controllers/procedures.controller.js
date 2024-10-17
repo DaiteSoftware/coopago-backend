@@ -46,7 +46,8 @@ export const getProcedureParams = async (req, res) => {
 
     const filteredParams = result.recordset.filter(param =>
       param.PARAMETER_NAME !== '@renglon' &&
-      param.PARAMETER_NAME !== '@programa'
+      param.PARAMETER_NAME !== '@programa' &&
+      param.PARAMETER_NAME !== '@id_usuario'
     )
 
     res.status(200).json(filteredParams)
@@ -64,16 +65,17 @@ export const executeStoredProcedure = async (req, res) => {
   }
 
   try {
-    const pool = await connectToDatabase(dbConfig)
+    const pool = await sql.connect(dbConfig)
     const request = pool.request()
 
-    for (const [key, value] of Object.entries(params)) {
-      request.input(key, value)
+    if (!procedureName.includes('traer')) {
+      for (const [key, value] of Object.entries(params)) {
+        request.input(key, value)
+      }
     }
 
     const result = await request.execute(procedureName)
 
-    await sql.close()
     res.status(200).json(result.recordset)
   } catch (err) {
     res.status(500).json({ error: 'Error executing stored procedure', details: err.message })
