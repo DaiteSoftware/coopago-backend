@@ -1,6 +1,6 @@
 import {
-  DB_DATABASE,
-  DB_PASSWORD,
+  DB_NAME,
+  DB_PWD,
   DB_SERVER,
   DB_USER,
   DB_PORT
@@ -10,9 +10,9 @@ import sql from 'mssql'
 export const dbSettings = {
   server: DB_SERVER,
   port: parseInt(DB_PORT),
-  database: DB_DATABASE,
+  database: DB_NAME,
   user: DB_USER,
-  password: DB_PASSWORD,
+  password: DB_PWD,
   options: {
     encrypt: true,
     trustServerCertificate: true
