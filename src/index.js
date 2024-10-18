@@ -2,19 +2,17 @@ import app from './app.js'
 import {
   DB_SERVER,
   DB_PORT,
-  DB_DATABASE,
+  DB_NAME,
   PORT,
   DB_USER,
-  DB_PASSWORD
+  DB_PWD
 } from './config.js'
-import { getConnection } from './database/connection.js'
-
 const requiredEnvVars = {
   DB_SERVER,
   DB_PORT,
-  DB_DATABASE,
+  DB_NAME,
   DB_USER,
-  DB_PASSWORD
+  DB_PWD
 }
 
 for (const [key, value] of Object.entries(requiredEnvVars)) {
@@ -24,6 +22,5 @@ for (const [key, value] of Object.entries(requiredEnvVars)) {
 }
 
 app.listen(PORT, () => {
-  getConnection()
+  console.log('Server on port', PORT)
 })
-console.log('Server on port', PORT)
