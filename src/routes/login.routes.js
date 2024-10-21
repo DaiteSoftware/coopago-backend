@@ -1,10 +1,6 @@
-import { Router } from 'express'
-import { login, logout } from '../controllers/login.controller.js'
-import { verifyUser } from '../middlewares/verifyDb.js'
+import { Router } from "express";
+import { login } from "../controllers/login.controller.js";
 
-const router = Router()
+export const loginRouter = Router();
 
-router.post('/login', verifyUser, login)
-router.post('/logout', logout)
-
-export default router
+loginRouter.post("/login", login);
