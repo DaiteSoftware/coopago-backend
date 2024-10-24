@@ -1,29 +1,37 @@
-import app from './app.js'
-import {
-  DB_SERVER,
-  DB_PORT,
-  DB_DATABASE,
-  PORT,
-  DB_USER,
-  DB_PASSWORD
-} from './config.js'
-import { getConnection } from './database/connection.js'
+import app from "./app.js";
+import { cManager } from "./database/connections.mjs";
+import { PORT } from './config.js';
 
-const requiredEnvVars = {
-  DB_SERVER,
-  DB_PORT,
-  DB_DATABASE,
-  DB_USER,
-  DB_PASSWORD
-}
 
-for (const [key, value] of Object.entries(requiredEnvVars)) {
-  if (!value) {
-    throw new Error(`${key} is missing`)
-  }
-}
+let server;
 
-app.listen(PORT, () => {
-  getConnection()
+server = app.listen(PORT, () => {
+    console.log(`Server is running in port ${PORT}`)
+    cManager.connectToBridgeDB()
 })
-console.log('Server on port', PORT)
+
+const exitHandler = () => {
+    if (server) {
+      server.close(() => {
+        console.log("Server closed")
+        process.exit(1);
+      });
+    } else {
+      process.exit(1);
+    }
+  };
+
+  const unexpectedErrorHandler = (error) => {
+    console.log(error)
+    exitHandler();
+  };
+  
+  process.on('uncaughtException', unexpectedErrorHandler);
+  process.on('unhandledRejection', unexpectedErrorHandler);
+  
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM received');
+    if (server) {
+      server.close();
+    }
+  });

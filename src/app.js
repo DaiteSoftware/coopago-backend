@@ -1,30 +1,33 @@
-import express from 'express'
-import cors from 'cors'
+import express from "express";
+import helmet from "helmet";
+import { JWT_SECRET, PARSER_SECRET, ENVIRONMENT, FRONTEND_URL } from "./config.js";
+import { loginRouter } from "./routes/login.routes.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import morgan from 'morgan'
-import login from './routes/login.routes.js'
-import session from 'express-session'
-import { SESSION_SECRET } from './config.js'
-import getStoredProcedures from './routes/procedures.routes.js'
-const app = express()
+
+ const app = express();
+
+if (ENVIRONMENT === "production") {
+
+}
+
+app.use(express.json());
+app.use(cookieParser(PARSER_SECRET))
+app.use(morgan('dev'))
+
+//Helper to send http headers appropiately
+app.use(helmet())
 
 app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}))
-app.use(morgan('dev'))
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
-app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-  })
-)
+    origin: FRONTEND_URL,
+  }))
 
-// Routes
-app.use('/api', login)
-app.use('/api', getStoredProcedures)
+//Reduces fingerprinting
+app.disable("x-powered by");
 
-export default app
+// Add routes
+app.use("/api", loginRouter);
+
+
+export default app;
